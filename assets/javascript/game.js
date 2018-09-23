@@ -538,22 +538,23 @@ $(document).ready(function() {
     "Z"
   ];
 
-  var movie;
-  var dashes;
-  var remaining;
+  var game;
+  var wins = 0;
+  var losses = 0;
+  var MAX_MISSES = 7;
 
-  function refresh() {
+  function start() {
     // position in the array
     var order = Math.floor(Math.random() * 249);
     // add imdbID to link in index
     var link = "http://www.imdb.com/title/" + movies.imdbID[order] + "/";
     $("#link a").attr("href", link);
     //variables
-    movie = movies.title[order].toUpperCase();
+    var movie = movies.title[order].toUpperCase();
 
     // make the dashes and remaining values
-    dashes = [];
-    remaining = [];
+    var dashes = [];
+    var remaining = [];
     for (i = 0; i < movie.length; i++) {
       if (letters.indexOf(movie[i]) > -1) {
         dashes[i] = "-";
@@ -565,32 +566,45 @@ $(document).ready(function() {
       }
     }
 
+    game = {
+      movie: movie,
+      dashes: dashes,
+      remaining: remaining,
+      misses: 0
+    };
+
     // set the dashes text
-    $("#dash-zone").text(dashes.join(""));
-    $("#remaining").text(remaining.length);
-    $("#answer").text(movie);
+    updateUI();
+  }
+
+  function updateUI() {
+    $("#dash-zone").text(game.dashes.join(""));
+    $("#remaining").text(game.remaining.length);
+    $("#answer").text(game.movie);
   }
 
   function clickButton(event) {
     var clicked = $(event.target);
     clicked.addClass("bg-dark text-white").attr("disabled", true);
     var letter = clicked.text();
-    var idx = remaining.indexOf(letter);
+    var idx = game.remaining.indexOf(letter);
     // correct guess
     if (idx > -1) {
-      remaining.splice(idx, 1);
-      for (i = 0; i < movie.length; i++) {
-        if (movie[i] === letter) {
-          dashes[i] = letter;
+      game.remaining.splice(idx, 1);
+      for (i = 0; i < game.movie.length; i++) {
+        if (game.movie[i] === letter) {
+          game.dashes[i] = letter;
         }
       }
-      $("#dash-zone").text(dashes.join(""));
-      $("#remaining").text(remaining.length);
+      updateUI();
     }
     // incorrect guess
     else {
+      game.misses++;
+      if (game.misses >= MAX_MISSES) youLost();
     }
   }
+  function youLost() {}
 
   // makes the letter buttons
   function makeButtons() {
@@ -604,16 +618,11 @@ $(document).ready(function() {
     $(".click-letter").on("click", clickButton);
   }
 
-  // comparing to alpha numeric characters
-  function isAlphanumeric(character) {
-    return character.match(/^[a-zA-Z]+$/i) !== null;
-  }
-
   // $("#clear").on("click", function() {
   //   $("#display").empty();
   // });
   // Refresh Movie
-  $("#refresh").on("click", refresh);
+  $("#start").on("click", start);
   makeButtons();
-  refresh();
+  start();
 });
