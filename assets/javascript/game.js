@@ -581,6 +581,7 @@ $(document).ready(function() {
     $("#dash-zone").text(game.dashes.join(""));
     $("#remaining").text(game.remaining.length);
     $("#answer").text(game.movie);
+    $("#misses").text(game.misses);
   }
 
   function clickButton(event) {
@@ -596,15 +597,17 @@ $(document).ready(function() {
           game.dashes[i] = letter;
         }
       }
-      updateUI();
     }
     // incorrect guess
     else {
       game.misses++;
       if (game.misses >= MAX_MISSES) youLost();
     }
+    updateUI();
   }
-  function youLost() {}
+  function youLost() {
+    alert("You Lost, son!");
+  }
 
   // makes the letter buttons
   function makeButtons() {
