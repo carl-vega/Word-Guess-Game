@@ -14,7 +14,7 @@
 
 </head>
 
-<body>
+<body id="input">
     <!-- Header -->
     <div class="container-fluid p-0">
         <div class="row m-0 p-0">
@@ -37,53 +37,52 @@
             <div class="col-lg-10 p-0 m-auto">
                 <!-- Content -->
                 <div class="row no-gutter justify-content-between p-0 m-0">
-                    <!-- left card -->
-                    <div class="card col-2 p-0 text-white bg-primary m-0">
-                        <div class="card-header" id="title"></div>
-                        <div class="card-body">
-                            <h4 class="card-title"></h4>
-                            <p class="card-text" id="link"><a class="text-white" href="http://www.imdb.com/title/tt0109830/"
-                                    target="_blank">Visit
-                                    the Page!</a></p>
-                        </div>
-                    </div>
-                    <!-- center card -->
+                    <!-- main card -->
                     <div class="card col p-0 text-white bg-dark m-0">
                         <div class="card-header row justify-content-center"><button id="start">New Game</button></div>
                         <div class="card-body">
                             <h4 class="card-title text-center">Fill in the blank</h4>
                             <p class="card-text">
-                                <h2 class="text-center" id="dash-zone"></h2>
+                                <h2 class="text-center" id="dash-zone">Click "New Game" or press any key to begin.</h2>
                                 <div class="row">
-                                    <!-- left card (snowman) -->
-                                    <div class="card col-6 p-0 text-dark bg-white m-0">
+                                    <!-- left card (rocketship) -->
+                                    <!-- to be done later after functionality is complete and submitted -->
+                                    <!-- <div class="card col-6 p-0 text-dark bg-white m-0">
                                         <div class="card-header">Inner Left</div>
                                         <div class="card-body">
                                             <h4 class="card-title">Primary card title</h4>
                                             <p class="card-text">Some quick example text to build on the card title and
                                                 make up the bulk of the card's content.</p>
                                         </div>
-                                    </div>
+                                    </div> -->
                                     <!-- right card (letters diplay) -->
-                                    <div class="card col-6 p-0 text-dark bg-white m-0">
+                                    <div class="card col-6 p-0 text-dark bg-white m-auto">
                                         <h1 class="card-text text-center" id="buttons"></h1>
                                     </div>
                                 </div>
                         </div>
                         </p>
                     </div>
-                    <!-- right card -->
-                    <div class="card col-2 text-white bg-primary m-0">
-                        <div class="card-header"></div>
-                        <div class="card-body">
-                            <h4 class="card-title"></h4>
-                            <p class="card-text">
-                                <span id="answer"></span>
-                            </p>
-                        </div>
-                    </div>
                 </div>
             </div>
+        </div>
+        <!-- bottom card -->
+        <div class="card col-10 p-0 text-white bg-primary m-auto">
+            <div class="card-header" id="title"></div>
+            <div class="card-body">
+                <h4 class="card-title"></h4>
+                <h1 class="card-text text-center"><a class="text-white" id="link">&nbsp;</a></h1>
+            </div>
+        </div>
+    </div>
+    <!-- temporary answer card -->
+    <div class="card col-10 text-white bg-primary m-auto">
+        <div class="card-header"></div>
+        <div class="card-body">
+            <h4 class="card-title"></h4>
+            <p class="card-text">
+                <span id="answer"></span>
+            </p>
         </div>
     </div>
     </div>

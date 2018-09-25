@@ -544,6 +544,9 @@ $(document).ready(function() {
   var MAX_MISSES = 7;
 
   function start() {
+    if (game) {
+      resetButtons();
+    }
     // position in the array
     var order = Math.floor(Math.random() * 249);
     // add imdbID to link in index
@@ -570,11 +573,97 @@ $(document).ready(function() {
       movie: movie,
       dashes: dashes,
       remaining: remaining,
-      misses: 0
+      misses: 0,
+      link: link
     };
 
     // set the dashes text
     updateUI();
+  }
+  // makes the letter buttons
+  function makeButtons() {
+    for (i = 0; i < letters.length; i++) {
+      $("#buttons").append(
+        $("<button>")
+          .addClass("click-letter")
+          .attr("id", letters[i])
+          .text(letters[i])
+      );
+    }
+    $(".click-letter").on("click", clickButton);
+  }
+
+  function clickButton(event) {
+    var clicked = $(event.target);
+    var letter = clicked.text();
+    pickLetter(letter);
+  }
+
+  function keystroke(event) {
+    if (game) {
+      var pressed = String.fromCharCode(event.keyCode).toUpperCase();
+      pickLetter(pressed);
+    } else {
+      start();
+    }
+  }
+
+  function pickLetter(letter) {
+    var idx = game.remaining.indexOf(letter);
+
+    if (letters.indexOf(letter) <= -1) {
+      return;
+    }
+
+    $("#" + letter)
+      .addClass("bg-dark text-white")
+      .attr("disabled", true);
+
+    if (idx > -1) {
+      // correct guess
+      game.remaining.splice(idx, 1);
+
+      for (i = 0; i < game.movie.length; i++) {
+        if (game.movie[i] === letter) {
+          game.dashes[i] = letter;
+        }
+      }
+      if (game.remaining.length < 1) {
+        youWon();
+      }
+    } else {
+      // incorrect guess
+      game.misses++;
+      if (game.misses >= MAX_MISSES) youLost();
+    }
+
+    updateUI();
+  }
+  // function called when game won
+  function youWon() {
+    wins++;
+    $(".click-letter").attr("disabled", true);
+    $("#link")
+      .addClass("a.currentlyActive")
+      .text("Congratulations you did it, now check out the movie!")
+      .attr("href", game.link);
+  }
+  //function called when game lost
+  function youLost() {
+    losses++;
+    $(".click-letter").attr("disabled", true);
+    $("#link")
+      .text(
+        "Uh-oh the princess is another castle, you might want to check out the movie!"
+      )
+      .attr("href", game.link);
+  }
+
+  // reset buttons
+  function resetButtons() {
+    $(".click-letter")
+      .removeClass("bg-dark text-white")
+      .removeAttr("disabled", true);
   }
 
   function updateUI() {
@@ -582,50 +671,15 @@ $(document).ready(function() {
     $("#remaining").text(game.remaining.length);
     $("#answer").text(game.movie);
     $("#misses").text(game.misses);
+    $("#wins").text(wins);
+    $("#losses").text(losses);
   }
 
-  function clickButton(event) {
-    var clicked = $(event.target);
-    clicked.addClass("bg-dark text-white").attr("disabled", true);
-    var letter = clicked.text();
-    var idx = game.remaining.indexOf(letter);
-    // correct guess
-    if (idx > -1) {
-      game.remaining.splice(idx, 1);
-      for (i = 0; i < game.movie.length; i++) {
-        if (game.movie[i] === letter) {
-          game.dashes[i] = letter;
-        }
-      }
-    }
-    // incorrect guess
-    else {
-      game.misses++;
-      if (game.misses >= MAX_MISSES) youLost();
-    }
-    updateUI();
-  }
-  function youLost() {
-    alert("You Lost, son!");
-  }
+  setTimeout(function() {
+    $(document).on("keyup", keystroke);
+  }, 1000);
 
-  // makes the letter buttons
-  function makeButtons() {
-    for (i = 0; i < letters.length; i++) {
-      $("#buttons").append(
-        $("<button>")
-          .addClass("click-letter")
-          .text(letters[i])
-      );
-    }
-    $(".click-letter").on("click", clickButton);
-  }
-
-  // $("#clear").on("click", function() {
-  //   $("#display").empty();
-  // });
-  // Refresh Movie
   $("#start").on("click", start);
   makeButtons();
-  start();
+  // start();
 });
